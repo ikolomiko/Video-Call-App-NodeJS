@@ -10,6 +10,8 @@ const stream = (socket)=>{
         }
 
         console.log(socket.rooms);
+        // trial
+        console.log(data.socketId);
     });
 
 
