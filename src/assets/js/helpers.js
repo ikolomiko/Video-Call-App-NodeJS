@@ -52,7 +52,7 @@ export default {
     getUserMedia(){
         if(this.userMediaAvailable()){
             return navigator.mediaDevices.getUserMedia({
-                video: true, 
+                video: {facingMode:"user"}, 
                 audio: {
                     echoCancellation: true
                 }
