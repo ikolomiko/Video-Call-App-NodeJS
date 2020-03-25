@@ -5,19 +5,26 @@ let io = require('socket.io')(server);
 let stream = require('./ws/stream');
 let path = require('path');
 
+function requireHTTPS(req, res, next) {
+	// The 'x-forwarded-proto' check is for Heroku
+	if (
+		!req.secure &&
+		req.get('x-forwarded-proto') !== 'https' &&
+		process.env.NODE_ENV !== 'development'
+	) {
+		return res.redirect('https://' + req.get('host') + req.url);
+	}
+	next();
+}
+app.use(requireHTTPS);
+
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-app.get('/', (req, res)=>{
-    res.sendFile(__dirname+'/index.html');
+app.get('/', (req, res) => {
+	res.sendFile(__dirname + '/index.html');
 });
-
-app.get('/.well-known/acme-challenge/NQeMTiv3dtCd2r6zksqwkK20K-9bT6PYSbcYPcZcMWM', 
-(req,res) => {
-    res.send('NQeMTiv3dtCd2r6zksqwkK20K-9bT6PYSbcYPcZcMWM.vy9Dgj_rJTvLQpbq090ysEtFlZqH6T3y8r2mCFSy60s');
-});
-
 
 io.of('/stream').on('connection', stream);
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 3000;
 server.listen(PORT);
