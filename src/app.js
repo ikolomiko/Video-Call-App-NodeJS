@@ -14,4 +14,4 @@ app.get('/', (req, res)=>{
 
 io.of('/stream').on('connection', stream);
 
-server.listen(80);
+server.listen(40732);
